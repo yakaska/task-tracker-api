@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TaskTrackerApiApplication {
 
     public static void main(String[] args) {
+
+        System.out.println("task-tracker-api");
+
         SpringApplication.run(TaskTrackerApiApplication.class, args);
     }
 
