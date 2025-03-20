@@ -1,7 +1,7 @@
 -- Создание таблицы пользователей
 CREATE TABLE users
 (
-    id         SERIAL PRIMARY KEY,
+    id    SERIAL PRIMARY KEY,
     email      VARCHAR(255) UNIQUE NOT NULL,
     password   VARCHAR(255)        NOT NULL,
     role       VARCHAR(50)         NOT NULL CHECK (role IN ('ADMIN', 'USER')),
@@ -11,7 +11,7 @@ CREATE TABLE users
 -- Создание таблицы задач
 CREATE TABLE tasks
 (
-    id          SERIAL PRIMARY KEY,
+    id     SERIAL PRIMARY KEY,
     title       VARCHAR(255) NOT NULL,
     description TEXT,
     status      VARCHAR(50)  NOT NULL CHECK (status IN ('PENDING', 'IN_PROGRESS', 'COMPLETED')),
@@ -27,7 +27,7 @@ CREATE TABLE tasks
 -- Создание таблицы комментариев
 CREATE TABLE comments
 (
-    id         SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     task_id    INT  NOT NULL,
     user_id    INT  NOT NULL,
     content    TEXT NOT NULL,

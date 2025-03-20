@@ -17,3 +17,4 @@ server:
 
 app:
   jwt-secret: ${JWT_SECRET}
+  jwt-expiration: 86400000
