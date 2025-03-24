@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ru.yakaska.tasktrackerapi.model.Role;
+import ru.yakaska.tasktrackerapi.model.UserRole;
 import ru.yakaska.tasktrackerapi.model.User;
 import ru.yakaska.tasktrackerapi.payload.request.LoginRequest;
 import ru.yakaska.tasktrackerapi.payload.request.SignupRequest;
@@ -43,8 +43,8 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping(path = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
         );
@@ -61,8 +61,8 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), roles));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody SignupRequest signupRequest) {
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
@@ -73,9 +73,7 @@ public class AuthController {
                 passwordEncoder.encode(signupRequest.getPassword())
         );
 
-        String role = signupRequest.getRole();
-
-        user.setRole(Role.valueOf(role));
+        user.setRole(UserRole.valueOf(signupRequest.getRole()));
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
