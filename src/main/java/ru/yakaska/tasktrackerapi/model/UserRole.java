@@ -1,6 +1,6 @@
 package ru.yakaska.tasktrackerapi.model;
 
-public enum Role {
+public enum UserRole {
     USER,
     ADMIN
 }
