@@ -9,12 +9,12 @@ import ru.yakaska.tasktrackerapi.repository.UserRepository;
 import ru.yakaska.tasktrackerapi.security.DefaultUserDetails;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class DefaultUserDetailsService implements UserDetailsService {
 
 
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public DefaultUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
