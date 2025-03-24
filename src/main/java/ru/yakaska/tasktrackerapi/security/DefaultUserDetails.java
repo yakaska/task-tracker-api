@@ -12,10 +12,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class UserDetailsImpl implements UserDetails {
+public class DefaultUserDetails implements UserDetails {
 
+    @Getter
     private final Long id;
 
+    @Getter
     private final String email;
 
     @JsonIgnore
@@ -23,19 +25,19 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public DefaultUserDetails(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(User user) {
+    public static DefaultUserDetails build(User user) {
         List<GrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority(user.getRole().name())
         );
 
-        return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities);
+        return new DefaultUserDetails(user.getId(), user.getEmail(), user.getPassword(), authorities);
     }
 
     @Override
@@ -79,15 +81,8 @@ public class UserDetailsImpl implements UserDetails {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
+        DefaultUserDetails user = (DefaultUserDetails) o;
         return Objects.equals(id, user.id);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

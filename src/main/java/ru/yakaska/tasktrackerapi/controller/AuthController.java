@@ -18,7 +18,7 @@ import ru.yakaska.tasktrackerapi.payload.response.JwtResponse;
 import ru.yakaska.tasktrackerapi.payload.response.MessageResponse;
 import ru.yakaska.tasktrackerapi.repository.UserRepository;
 import ru.yakaska.tasktrackerapi.security.JwtUtils;
-import ru.yakaska.tasktrackerapi.security.UserDetailsImpl;
+import ru.yakaska.tasktrackerapi.security.DefaultUserDetails;
 
 import java.util.List;
 
@@ -46,13 +46,13 @@ public class AuthController {
     @PostMapping(path = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        DefaultUserDetails userDetails = (DefaultUserDetails) authentication.getPrincipal();
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

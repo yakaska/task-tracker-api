@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.yakaska.tasktrackerapi.model.User;
 import ru.yakaska.tasktrackerapi.repository.UserRepository;
-import ru.yakaska.tasktrackerapi.security.UserDetailsImpl;
+import ru.yakaska.tasktrackerapi.security.DefaultUserDetails;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,6 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(user);
+        return DefaultUserDetails.build(user);
     }
 }

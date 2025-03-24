@@ -1,12 +1,14 @@
 package ru.yakaska.tasktrackerapi.payload.request;
 
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
 
+@Getter
 public class SignupRequest {
 
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 
     @Pattern(regexp = "ADMIN|USER", message = "Role must be either ADMIN or USER")
     private String role;
@@ -16,15 +18,4 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
 }
