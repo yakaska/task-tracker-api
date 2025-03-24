@@ -1,10 +1,20 @@
 package ru.yakaska.tasktrackerapi.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +23,9 @@ import java.time.LocalDateTime;
         name = "users",
         uniqueConstraints = @UniqueConstraint(columnNames = "email")
 )
+@NoArgsConstructor
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -28,8 +41,9 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(name = "role", nullable = false)
+    @Setter
+    private UserRole userRole;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
@@ -39,30 +53,12 @@ public class User {
         this.password = password;
     }
 
-    public User() {
+    public UserRole getRole() {
+        return userRole;
     }
 
-    public Long getId() {
-        return id;
+    public void setRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }
