@@ -1,12 +1,10 @@
 package ru.yakaska.tasktrackerapi.payload.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Data
 public class TaskDto {
 
@@ -15,8 +13,8 @@ public class TaskDto {
     private String description;
     private String status;
     private String priority;
-    private String authorEmail;
-    private String assigneeEmail;
+    private String author;
+    private String assignee;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")

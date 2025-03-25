@@ -1,24 +1,29 @@
 package ru.yakaska.tasktrackerapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yakaska.tasktrackerapi.mapper.TaskMapper;
 import ru.yakaska.tasktrackerapi.model.Task;
 import ru.yakaska.tasktrackerapi.payload.dto.TaskDto;
+import ru.yakaska.tasktrackerapi.payload.request.CreateTaskRequest;
+import ru.yakaska.tasktrackerapi.payload.request.UpdateTaskRequest;
 import ru.yakaska.tasktrackerapi.service.TaskService;
 import ru.yakaska.tasktrackerapi.specification.TaskSpecification;
 
@@ -63,38 +68,34 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> showTask(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<TaskDto> showTask(@PathVariable Long id) {
+        Task task = taskService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        return ResponseEntity.ok(taskMapper.taskToTaskDto(task));
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createTask() {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<TaskDto> createTask(@RequestBody @Valid CreateTaskRequest createTaskRequest) {
+        Task createdTask = taskService.create(createTaskRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(taskMapper.taskToTaskDto(createdTask));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
+        Task updated = taskService.update(id, updateTaskRequest);
+        return ResponseEntity.ok(taskMapper.taskToTaskDto(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
+        boolean isDeleted = taskService.delete(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<?> updateTaskStatus(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
-    }
-
-    @PatchMapping("/{id}/priority")
-    public ResponseEntity<?> updateTaskPriority(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
-    }
-
-    @PatchMapping("/{id}/assign")
-    public ResponseEntity<?> assignTask(@PathVariable Long id) {
-        throw new UnsupportedOperationException();
-    }
-
 }
