@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-public class TaskDTO {
+public class TaskDto {
 
     private Long id;
     private String title;

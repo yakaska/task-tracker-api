@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yakaska.tasktrackerapi.mapper.TaskMapper;
 import ru.yakaska.tasktrackerapi.model.Task;
-import ru.yakaska.tasktrackerapi.payload.dto.TaskDTO;
+import ru.yakaska.tasktrackerapi.payload.dto.TaskDto;
 import ru.yakaska.tasktrackerapi.service.TaskService;
 import ru.yakaska.tasktrackerapi.specification.TaskSpecification;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -30,10 +30,11 @@ import java.util.Objects;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<TaskDTO>> index(
+    public ResponseEntity<List<TaskDto>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
@@ -53,23 +54,12 @@ public class TaskController {
                 .and(TaskSpecification.hasPriority(priority))
                 .and(TaskSpecification.hasAuthorId(authorId));
 
-        List<Task> tasks = taskService.find(specification, pageable);
+        List<TaskDto> tasks = taskService.find(specification, pageable)
+                .stream()
+                .map(taskMapper::taskToTaskDto)
+                .toList();
 
-        List<TaskDTO> taskDTOs = tasks.stream()
-                .map(task -> TaskDTO.builder()
-                        .id(task.getId())
-                        .title(task.getTitle())
-                        .description(task.getDescription())
-                        .status(task.getStatus().name())
-                        .priority(task.getPriority().name())
-                        .authorEmail(task.getAuthor().getEmail())
-                        .assigneeEmail(task.getAssignee().getEmail())
-                        .createdAt(task.getCreatedAt())
-                        .updatedAt(task.getUpdatedAt())
-                        .build()
-                ).toList();
-
-        return ResponseEntity.ok(taskDTOs);
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{id}")
