@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yakaska.tasktrackerapi.mapper.TaskMapper;
 import ru.yakaska.tasktrackerapi.model.Task;
 import ru.yakaska.tasktrackerapi.payload.dto.TaskDto;
@@ -69,9 +68,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> showTask(@PathVariable Long id) {
-        Task task = taskService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-
+        Task task = taskService.findById(id);
         return ResponseEntity.ok(taskMapper.taskToTaskDto(task));
     }
 

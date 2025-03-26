@@ -17,7 +17,6 @@ import ru.yakaska.tasktrackerapi.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -34,8 +33,9 @@ public class TaskService {
                 .getContent();
     }
 
-    public Optional<Task> findById(Long id) {
-        return taskRepository.findById(id);
+    public Task findById(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
     }
 
     public Task create(CreateTaskRequest createTaskRequest) {
