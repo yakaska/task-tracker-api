@@ -7,4 +7,5 @@ import ru.yakaska.tasktrackerapi.model.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
+
 }

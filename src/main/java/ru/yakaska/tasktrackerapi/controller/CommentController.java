@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/tasks/{taskId}/comments")
 public class CommentController {
 
-    @GetMapping("/task/{taskId}")
+
+    @GetMapping()
     public RequestEntity<?> showTaskComments(@PathVariable Long taskId) {
         throw new UnsupportedOperationException();
     }
 
-    @PostMapping("/task/{taskId}")
+    @PostMapping()
     public RequestEntity<?> addComment(@PathVariable Long taskId) {
         throw new UnsupportedOperationException();
     }
