@@ -10,7 +10,7 @@ import ru.yakaska.tasktrackerapi.model.TaskStatus;
 import ru.yakaska.tasktrackerapi.payload.dto.TaskDto;
 import ru.yakaska.tasktrackerapi.payload.request.CreateTaskRequest;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {UserMapper.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = UserQualifier.class)
 public interface TaskMapper {
 
     @Mapping(target = "author", source = "author", qualifiedByName = "emailToUser")

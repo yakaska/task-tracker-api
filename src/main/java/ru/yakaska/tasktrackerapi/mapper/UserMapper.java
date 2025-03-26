@@ -1,23 +1,13 @@
 package ru.yakaska.tasktrackerapi.mapper;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import ru.yakaska.tasktrackerapi.model.User;
-import ru.yakaska.tasktrackerapi.repository.UserRepository;
+import ru.yakaska.tasktrackerapi.payload.response.UserResponse;
 
-@Component
-public class UserMapper {
-
-    private final UserRepository userRepository;
-
-    public UserMapper(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Named("emailToUser")
-    public User emailToUser(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found"));
-    }
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = UserQualifier.class)
+public interface UserMapper {
+    @Mapping(source = "userRole", target = "roles", qualifiedByName = "mapRoles")
+    UserResponse toUserResponse(User user);
 }

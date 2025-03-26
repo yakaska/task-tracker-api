@@ -8,20 +8,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yakaska.tasktrackerapi.mapper.UserMapper;
 import ru.yakaska.tasktrackerapi.payload.response.UserResponse;
 import ru.yakaska.tasktrackerapi.security.DefaultUserDetails;
-import ru.yakaska.tasktrackerapi.service.DefaultUserDetailsService;
+import ru.yakaska.tasktrackerapi.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private DefaultUserDetailsService userService;
+    private final UserService userService;
+    private final UserMapper userMapper;
+
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal DefaultUserDetails userDetails) {
-
         UserResponse userResponse = new UserResponse(
                 userDetails.getId(),
                 userDetails.getEmail(),
@@ -34,11 +40,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> userinfo(@PathVariable Long id) {
-        return userService.findById(id)
-                .map(UserResponse::from)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponse> userInfo(@PathVariable Long id) {
+        UserResponse userResponse = userMapper.toUserResponse(userService.findById(id));
+
+        return ResponseEntity.ok(userResponse);
     }
 
 
